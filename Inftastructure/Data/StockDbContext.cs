@@ -9,7 +9,7 @@ namespace Infrastructure.Data
         public StockDbContext(DbContextOptions<StockDbContext> options) : base(options) { }
 
         public DbSet<Item> Items { get; set; }
-        public DbSet<ItemCategory> ItemCategories { get; set; }
+        public DbSet<Category> ItemCategories { get; set; }
         public DbSet<MeasureUnit> MeasureUnits { get; set; }
 
 
@@ -20,7 +20,7 @@ namespace Infrastructure.Data
             builder.Entity<Item>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
-            builder.Entity<ItemCategory>()
+            builder.Entity<Category>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
             builder.Entity<MeasureUnit>()

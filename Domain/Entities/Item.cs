@@ -12,7 +12,9 @@ namespace Domain.Entities
         public string Description { get; set; }
         public DateTime EntryDate { get; set; }
         public float Quantity { get; set; }
+        public Category Category { get; set; }
         public int CategoryId {get; set;}
+        public MeasureUnit MeasureUnit { get; set; }
         public int MeasureUnitId { get; set; }
 
     }

@@ -10,5 +10,8 @@ namespace Domain.Interfaces.Repositories
     {
         Task<Item> GetItemByIdAsync(int id);
         Task<IReadOnlyList<Item>> GetItemsAsync();
+        Task<IReadOnlyList<Category>> GetCategoriesAsync();
+        Task<IReadOnlyList<MeasureUnit>> GetMeasureUnitsAsync();
+
     }
 }

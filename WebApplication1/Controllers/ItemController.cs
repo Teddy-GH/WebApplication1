@@ -15,48 +15,49 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class ItemController : ControllerBase
     {
-        private readonly StockDbContext _context;
+        //private readonly StockDbContext _context;
 
-        //private readonly IItemRepository _repo;
+        private readonly IItemRepository _repo;
         //IItemRepository repo
-        public ItemController(StockDbContext context)
+        public ItemController(IItemRepository repo)
         {
-            _context = context;
-            //_repo = repo;
+            //_context = context;
+            _repo = repo;
         }
         public ActionResult Index()
         {
             return Ok("You are here");
         }
+
         [HttpGet]
 
-        public ActionResult<List<Item>> GetItems()
+        public async Task<ActionResult<List<Item>>> GetItems()
         {
-            var items =  _context.Items.ToListAsync();
+            var items = await _repo.GetItemsAsync();
             return Ok(items);
         }
 
-        //public   List<string> GetAll()
-        //{
-        //    // var items = await _repo.GetItemsAsync();
-        //    List<string> lists =  new List<string>();
-        //    var items =  lists;
-        //    items.Add("test");
-        //    return items;
-        //}
+        
 
         [HttpGet("{id}")]
 
         public async Task<ActionResult<Item>> GetItem(int id) 
         {
 
-            return await _context.Items.FindAsync(id);
+            return await _repo.GetItemByIdAsync(id);
         }
 
-        //public async Task<ActionResult<Item>> GetItem(int id)
-        //{
-        //    return await  _repo.GetItemByIdAsync(id);
-        //}
-
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<Category>>> GetCategories()
+        {
+            return Ok(await _repo.GetCategoriesAsync()) ;
         }
+
+
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<MeasureUnit>>> GetMeasureUnits()
+        {
+            return Ok(await _repo.GetMeasureUnitsAsync());
+        }
+    }
 }

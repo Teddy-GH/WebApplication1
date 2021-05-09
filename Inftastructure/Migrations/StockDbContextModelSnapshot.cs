@@ -19,6 +19,24 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+            modelBuilder.Entity("Domain.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ItemCategories");
+                });
+
             modelBuilder.Entity("Domain.Entities.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -46,28 +64,14 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("MeasureUnitId");
+
                     b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Items");
-                });
-
-            modelBuilder.Entity("Domain.Entities.ItemCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("ItemCategories");
                 });
 
             modelBuilder.Entity("Domain.Entities.MeasureUnit", b =>
@@ -86,6 +90,25 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("MeasureUnits");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Item", b =>
+                {
+                    b.HasOne("Domain.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.MeasureUnit", "MeasureUnit")
+                        .WithMany()
+                        .HasForeignKey("MeasureUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("MeasureUnit");
                 });
 #pragma warning restore 612, 618
         }

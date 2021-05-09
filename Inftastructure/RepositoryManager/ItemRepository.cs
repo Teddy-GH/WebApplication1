@@ -18,14 +18,32 @@ namespace Infrastructure.RepositoryManager
             _context = context;
         }
 
+        public async Task<IReadOnlyList<Category>> GetCategoriesAsync()
+        {
+            return await _context.ItemCategories.ToListAsync();
+
+        }
+
         public async Task<Item> GetItemByIdAsync(int id)
         {
-            return await _context.Items.FindAsync(id);
+            return await _context.Items
+                .Include(i => i.Category)
+                .Include(i => i.MeasureUnit)
+                .FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<IReadOnlyList<Item>> GetItemsAsync()
         {
-            return await _context.Items.ToListAsync();
+            return await _context.Items
+                .Include(i => i.Category)
+                .Include(i => i.MeasureUnit)
+                .ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<MeasureUnit>> GetMeasureUnitsAsync()
+        {
+            return await _context.MeasureUnits.ToListAsync();
+
         }
     }
 }
