@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Item
+    public class Item : BaseEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+      
         public string Description { get; set; }
         public DateTime EntryDate { get; set; }
         public float Quantity { get; set; }
