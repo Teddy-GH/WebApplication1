@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Domain.DTO;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
@@ -20,12 +21,16 @@ namespace WebApplication1.Controllers
         private readonly IGenericRepository<Item> _itemsRepo;
         private readonly IGenericRepository<Category> _categoriesRepo;
         private readonly IGenericRepository<MeasureUnit> _measureUnitsRepo;
+
+        public IMapper _mapper {get;}
+
         // private readonly IItemRepository _repo;
-        public ItemController(IGenericRepository<Item> itemsRepo, IGenericRepository<Category> categoriesRepo, IGenericRepository<MeasureUnit> measureUnitsRepo)
+        public ItemController(IGenericRepository<Item> itemsRepo, IGenericRepository<Category> categoriesRepo, IGenericRepository<MeasureUnit> measureUnitsRepo, IMapper mapper)
         {
             _itemsRepo = itemsRepo;
             _categoriesRepo = categoriesRepo;
             _measureUnitsRepo = measureUnitsRepo;
+            _mapper = mapper;
         }
         public ActionResult Index()
         {
@@ -34,23 +39,15 @@ namespace WebApplication1.Controllers
 
         [HttpGet]
 
-        public async Task<ActionResult<List<ResponseDTO>>> GetItems()
+        public async Task<ActionResult<IReadOnlyList<ResponseDTO>>> GetItems()
         {
 
             var spec = new ItemsWithCategoriesAndMeasureUnits();
 
             var items = await _itemsRepo.ListAsync(spec);
 
-            return items.Select(item => new ResponseDTO
-            {
-                Id = item.Id,
-                Description = item.Description,
-                EntryDate = item.EntryDate,
-                Quantity = item.Quantity,
-                Category = item.Category.Name,
-                MeasureUnit = item.MeasureUnit.Name
-
-            }).ToList();
+            return Ok(_mapper.
+                Map<IReadOnlyList<Item>, IReadOnlyList<ResponseDTO>>(items));
         }
 
         
@@ -62,17 +59,7 @@ namespace WebApplication1.Controllers
             var spec = new ItemsWithCategoriesAndMeasureUnits(id);
 
             var item = await _itemsRepo.GetEntityWithSpec(spec);
-            return new ResponseDTO
-            {
-                Id = item.Id,
-                Description = item.Description,
-                EntryDate = item.EntryDate,
-                Quantity = item.Quantity,
-                Category = item.Category.Name,
-                MeasureUnit = item.MeasureUnit.Name
-
-
-            };
+            return _mapper.Map<Item, ResponseDTO>(item);
         }
 
         [HttpGet]

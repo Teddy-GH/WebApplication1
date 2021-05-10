@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApplication1.Helpers;
 
 namespace WebApplication1
 {
@@ -29,6 +30,8 @@ namespace WebApplication1
             services.AddScoped<IItemRepository, ItemRepository>((i) => 
             new ItemRepository(i.GetRequiredService<StockDbContext>())
             );
+            services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
+            services.AddAutoMapper(typeof(MappingProfiles));
 
           
         }
