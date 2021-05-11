@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using WebApplication1.Helpers;
 
 namespace WebApplication1
@@ -27,15 +28,15 @@ namespace WebApplication1
             services.AddEntityFrameworkNpgsql().AddDbContext<StockDbContext>(option =>
                option.UseNpgsql(Configuration.GetConnectionString("StockConnection"), p => p.MigrationsAssembly("Infrastructure"))
            );
-            services.AddScoped<IItemRepository, ItemRepository>((i) => 
+            services.AddScoped<IItemRepository, ItemRepository>((i) =>
             new ItemRepository(i.GetRequiredService<StockDbContext>())
             );
             services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
             services.AddAutoMapper(typeof(MappingProfiles));
-
-          
+            services.AddSwaggerGen(c =>
+               c.SwaggerDoc("v1", new OpenApiInfo { Title = "Stock API", Version = "v1" })
+           );
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -45,10 +46,15 @@ namespace WebApplication1
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("allPolicy");
             app.UseRouting();
-
             app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Stock API");
+            
+            });
 
             app.UseEndpoints(endpoints =>
             {

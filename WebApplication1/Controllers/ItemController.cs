@@ -14,8 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication1.Controllers
 {
-    [Route("api/[controller]/[action]")]
-    [ApiController]
+    
     public class ItemController : ControllerBase
     {
         private readonly IGenericRepository<Item> _itemsRepo;
@@ -32,17 +31,12 @@ namespace WebApplication1.Controllers
             _measureUnitsRepo = measureUnitsRepo;
             _mapper = mapper;
         }
-        public ActionResult Index()
-        {
-            return Ok("You are here");
-        }
-
+       
         [HttpGet]
-
-        public async Task<ActionResult<IReadOnlyList<ResponseDTO>>> GetItems()
+        public async Task<ActionResult<IReadOnlyList<ResponseDTO>>> GetItems(string sort)
         {
 
-            var spec = new ItemsWithCategoriesAndMeasureUnits();
+            var spec = new ItemsWithCategoriesAndMeasureUnits(sort);
 
             var items = await _itemsRepo.ListAsync(spec);
 

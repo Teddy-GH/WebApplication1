@@ -8,10 +8,11 @@ namespace Infrastructure.SpecificationsManager
 {
     public class ItemsWithCategoriesAndMeasureUnits : SpecificationsManager<Item>
     {
-        public ItemsWithCategoriesAndMeasureUnits()
+        public ItemsWithCategoriesAndMeasureUnits(string sort)
         {
             AddInclude(x => x.Category);
             AddInclude(x => x.MeasureUnit);
+            AddOrderBy(x => x.Name);
 
 
         }

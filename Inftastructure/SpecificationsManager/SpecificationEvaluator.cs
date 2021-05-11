@@ -20,6 +20,17 @@ namespace Infrastructure.SpecificationsManager
                 query = query.Where(spec.Criteria);//i => i.categoryId =id
             }
 
+
+            if (spec.OrderBy != null)
+            {
+                query = query.OrderBy(spec.OrderBy);//i => i.categoryId =id
+            }
+
+            if (spec.OrderByDescending!= null)
+            {
+                query = query.OrderByDescending(spec.OrderByDescending);//i => i.categoryId =id
+            }
+
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
 
             return query;
