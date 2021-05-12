@@ -58,7 +58,7 @@ namespace WebApplication1
             app.UseSwagger();
             app.UseSwaggerUI(c => {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Stock API");
-            
+            c.RoutePrefix = string.Empty;
             });
 
             app.UseEndpoints(endpoints =>

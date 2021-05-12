@@ -7,6 +7,7 @@ namespace Domain.DTO
  public  class ResponseDTO
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public DateTime EntryDate { get; set; }
         public float Quantity { get; set; }

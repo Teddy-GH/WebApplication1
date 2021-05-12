@@ -15,7 +15,8 @@ using WebApplication1.Helpers;
 
 namespace WebApplication1.Controllers
 {
-    
+    [ApiController]
+    [Route("api/[controller]/[action]")]
     public class ItemController : ControllerBase
     {
         private readonly IGenericRepository<Item> _itemsRepo;
