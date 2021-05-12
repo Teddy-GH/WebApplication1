@@ -31,6 +31,11 @@ namespace Infrastructure.SpecificationsManager
                 query = query.OrderByDescending(spec.OrderByDescending);//i => i.categoryId =id
             }
 
+            if(spec.IsPagingEnabled)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+            }
+             
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
 
             return query;

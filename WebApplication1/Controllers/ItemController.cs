@@ -11,6 +11,7 @@ using Infrastructure.SpecificationsManager;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Helpers;
 
 namespace WebApplication1.Controllers
 {
@@ -33,16 +34,21 @@ namespace WebApplication1.Controllers
         }
        
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ResponseDTO>>> GetItems(string sort)
+        public async Task<ActionResult<Pagination<ResponseDTO>>> GetItems([FromQuery]ItemSpecParams itemParams)
         {
 
-            var spec = new ItemsWithCategoriesAndMeasureUnits(sort);
+            var spec = new ItemsWithCategoriesAndMeasureUnits(itemParams);
+
+            var count = new ItemCountSpecification(itemParams);
+
+            var totalItems = await _itemsRepo.CountAsync(count);
 
             var items = await _itemsRepo.ListAsync(spec);
 
-            return Ok(_mapper.
-                Map<IReadOnlyList<Item>, IReadOnlyList<ResponseDTO>>(items));
-        }
+            var data  = _mapper
+                .Map<IReadOnlyList<Item>, IReadOnlyList<ResponseDTO>>(items);
+
+            return Ok(new Pagination<ResponseDTO>(itemParams.PageIndex, itemParams.PageSize, totalItems, data));        }
 
         
 

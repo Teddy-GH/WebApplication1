@@ -36,6 +36,11 @@ namespace WebApplication1
             services.AddSwaggerGen(c =>
                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Stock API", Version = "v1" })
            );
+            services.AddCors(o => o.AddPolicy("CorsPolicy", policy =>
+            {
+                policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+            }));
+
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -46,7 +51,7 @@ namespace WebApplication1
             }
 
             app.UseHttpsRedirection();
-            app.UseCors("allPolicy");
+            app.UseCors("CorsPolicy");
             app.UseRouting();
             app.UseAuthorization();
 
